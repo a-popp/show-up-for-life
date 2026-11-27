@@ -41,10 +41,13 @@ node_modules/
 
 # Application build/test output (for future use)
 .next/
+next-env.d.ts
 out/
 dist/
 build/
 coverage/
+playwright-report/
+test-results/
 *.tsbuildinfo
 
 # Local data, logs, and OS/editor noise

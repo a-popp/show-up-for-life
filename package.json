@@ -1,0 +1,69 @@
+{
+  "name": "show-up-for-life",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.16.0 <25.0.0",
+    "npm": ">=11.13.0 <12.0.0"
+  },
+  "overrides": {
+    "esbuild": "0.28.2"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "worker": "tsx src/server/jobs/worker.ts",
+    "lint": "eslint .",
+    "typecheck": "next typegen && tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:e2e": "playwright test",
+    "db:up": "docker compose --env-file .env.local up -d postgres",
+    "db:down": "docker compose --env-file .env.local down",
+    "db:ps": "docker compose --env-file .env.local ps",
+    "db:logs": "docker compose --env-file .env.local logs -f postgres",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "auth:generate": "auth generate --adapter drizzle --dialect postgresql --config src/server/auth.cli.ts --output src/server/db/schema/auth.ts --yes && prettier --write src/server/db/schema/auth.ts"
+  },
+  "dependencies": {
+    "@better-auth/drizzle-adapter": "1.7.27",
+    "@radix-ui/react-slot": "1.5.0",
+    "better-auth": "1.7.27",
+    "drizzle-orm": "0.45.4",
+    "next": "16.4.6",
+    "pg": "8.23.1",
+    "pino": "10.4.0",
+    "react": "19.1.10",
+    "react-dom": "19.1.10",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.65.1",
+    "@tailwindcss/postcss": "4.3.5",
+    "@testing-library/jest-dom": "8.0.0",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.13",
+    "@types/node": "24.19.2",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.3.0",
+    "auth": "1.7.27",
+    "drizzle-kit": "0.31.11",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.6",
+    "jsdom": "31.0.1",
+    "prettier": "3.10.1",
+    "tailwindcss": "4.3.5",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "5.1.1"
+  }
+}

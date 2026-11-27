@@ -12,13 +12,13 @@ This runbook is planning documentation only. Do not provision resources or mutat
 
 Check current DigitalOcean and Mailgun pricing at planning time; do not hard-code prices in repository documentation.
 
-## Important auto-deploy caveat
+## Deployment gating
 
-App Platform auto-deploy from a GitHub branch may build/deploy when a commit arrives and may not wait for GitHub Actions checks to pass. This is acceptable only during early private experimentation if the maintainer understands the risk. Before public/production reliance:
+`.do/app.yaml.example` intentionally disables `deploy_on_push`. App Platform auto-deploy from a GitHub branch may build/deploy when a commit arrives and may not wait for GitHub Actions checks to pass, so it must not be enabled for production reliance without an equivalent non-bypassable gate. Before public/production reliance:
 
 1. transition away from direct-to-main commits;
 2. use branch protection/rulesets and pull requests with required checks; and
-3. consider an Actions-controlled deployment gate or a deployment model that cannot bypass checks.
+3. use an Actions-controlled deployment gate or a deployment model that cannot bypass checks.
 
 ## Manual pre-provisioning checklist
 

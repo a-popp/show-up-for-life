@@ -29,9 +29,9 @@ GitHub-native secret scanning and push protection may require paid GitHub Secret
 - Create a least-privilege DigitalOcean token only when deployment is approved; store it in GitHub secrets rather than the repository.
 - Keep deployment manual or gated until branch protections/checks are reliable.
 
-## Optional CodeQL
+## Static application security testing
 
-No active CodeQL workflow is included yet because there is no application code and private-repository GitHub code security features may require a paid plan. When the repository becomes public, or if the maintainer chooses a paid feature, add a minimal CodeQL workflow for JavaScript/TypeScript, pinned to full SHAs and scoped to relevant paths.
+No active CodeQL workflow is included yet because private-repository GitHub code security features may require a paid plan and the repository is not yet public. This is a deferred public-beta gate, not a permanent omission. When the repository becomes public, or if the maintainer chooses an available paid feature or another cost-appropriate scanner, add a minimal JavaScript/TypeScript SAST workflow such as CodeQL or Semgrep, pinned to full SHAs where applicable and scoped to relevant paths. Do not make the beta public without reviewing the resulting high/critical findings.
 
 ## Repository deletion and destructive actions
 

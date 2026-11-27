@@ -4,16 +4,67 @@ Show Up For Life is a planned responsive web application that helps people turn 
 
 ## Current status
 
-This repository is intentionally **workspace-only** right now. It contains development guardrails, documentation, validation tooling, and CI/CD scaffolding. It does not yet contain the application, and no cloud or email resources have been provisioned by this workspace setup.
+This repository now contains the **Phase 00 application foundation**: a strict TypeScript/Next.js shell, PostgreSQL/Drizzle foundation, Better Auth integration skeleton, database-backed job/outbox primitives, and test/CI harnesses. It does not yet contain user-facing account, event, matching, notification, or social product behavior. No cloud or email resources have been provisioned.
 
-The planned implementation direction is a TypeScript modular monolith using Next.js/React, Node, PostgreSQL, npm, DigitalOcean App Platform, and Mailgun for transactional email. Those are planning constraints, not deployed resources.
+The implementation direction is a TypeScript modular monolith using Next.js/React, Node, PostgreSQL, npm, DigitalOcean App Platform, and Mailgun for transactional email. DigitalOcean and Mailgun remain planning constraints, not deployed resources.
 
 ## Local requirements
 
 - Node.js matching `.nvmrc` for future application work
 - Python matching `.python-version` for workspace validation hooks
 - npm (bundled with Node)
-- Docker is available for optional future container work, but is not required for the current workspace checks
+- Docker Desktop/Compose for the standard local PostgreSQL service
+
+## Application setup
+
+1. Copy `.env.example` to `.env.local` manually. Never commit `.env.local`.
+2. In `.env.local`, set a locally generated `POSTGRES_PASSWORD` and a high-entropy `BETTER_AUTH_SECRET` of at least 32 characters. Set `DATABASE_URL` to the matching local PostgreSQL connection string, including the local password in the connection string's user-info portion.
+3. Install dependencies:
+
+   ```bash
+   npm ci
+   ```
+
+4. Start local PostgreSQL:
+
+   ```bash
+   npm run db:up
+   ```
+
+   Use `npm run db:ps` to inspect container status and `npm run db:logs` to inspect PostgreSQL logs.
+
+5. Apply migrations:
+
+   ```bash
+   npm run db:migrate
+   ```
+
+6. Start the web application and, when needed, the worker in separate terminals:
+
+   ```bash
+   npm run dev
+   npm run worker
+   ```
+
+   For a diagnostic single polling batch that exits afterward, use `npm run worker -- --once`.
+
+Useful checks:
+
+```bash
+npm run lint
+npm run typecheck
+npm run format:check
+npm test
+npm run test:integration
+npm run test:e2e
+npm run build
+```
+
+Playwright browser installation may be required before the first E2E run:
+
+```bash
+npx playwright install chromium
+```
 
 ## Workspace verification
 

@@ -200,6 +200,10 @@ def validate_env_example(errors: list[str]) -> None:
     allowed_nonempty = {
         "APP_ENV": {"development"},
         "APP_BASE_URL": {"http://localhost:3000"},
+        "POSTGRES_USER": {"showup"},
+        "POSTGRES_DB": {"showup_for_life"},
+        "POSTGRES_PORT": {"5432"},
+        "BETTER_AUTH_URL": {"http://localhost:3000"},
     }
     for line_number, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
         line = raw.strip()

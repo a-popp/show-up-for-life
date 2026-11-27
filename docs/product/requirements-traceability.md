@@ -1,6 +1,6 @@
 # Requirements traceability
 
-This lightweight matrix connects `design.md` requirements to implementation and test evidence. Everything is initially unimplemented because this repository currently contains workspace scaffolding only.
+This lightweight matrix connects `design.md` requirements to implementation and test evidence. Product behavior remains largely unimplemented; Phase 00 established the application foundation and supporting evidence.
 
 | Requirement | Scope | Implementation status | Test/evidence | Notes |
 | --- | --- | --- | --- | --- |
@@ -22,12 +22,12 @@ This lightweight matrix connects `design.md` requirements to implementation and 
 | Task 5 | Privacy/data protection | Not implemented | None | GDPR-inspired baseline; data rights |
 | Task 6 | Reliability signals/fairness | Not implemented | None | Must avoid shaming/penalties |
 | Task 7 | Ethical design/wellbeing | Not implemented | None | High-priority constraint |
-| Task 8 | Accessibility/inclusion | Not implemented | None | WCAG 2.2 AA direction |
-| Task 9 | Security | Not implemented | Workspace scanner only | OWASP ASVS/SSDF-oriented |
-| Task 10 | Technology/architecture | Not implemented | Target architecture documented | TypeScript modular monolith direction |
+| Task 8 | Accessibility/inclusion | Foundation started | `tests/component/app-shell.test.tsx`; `tests/e2e/accessibility.spec.ts` | WCAG 2.2 AA direction; product UX not yet implemented |
+| Task 9 | Security | Foundation started | `next.config.ts`; `tests/unit/security-headers.test.ts`; workspace scanner/CI audit | OWASP ASVS/SSDF-oriented; auth/product security controls still pending |
+| Task 10 | Technology/architecture | Foundation implemented | `src/server`; `docker-compose.yml`; `drizzle/0000_lying_riptide.sql`; `src/server/jobs` | TypeScript modular monolith, PostgreSQL, explicit migrations, same-app worker entrypoint |
 | Task 11 | Responsible AI (conditional) | Not implemented | None | No product AI without explicit approval |
 | Task 12 | Analytics/measurement | Not implemented | None | Privacy-preserving measurement required |
-| Task 13 | Testing | Not implemented | Workspace script tests only | Future requirement tests mandatory |
-| Task 14 | Documentation | Partially started | Workspace docs exist | Product docs must evolve with implementation |
+| Task 13 | Testing | Foundation implemented | `tests/unit`; `tests/component`; `tests/integration`; `tests/e2e` | Requirement-specific product tests remain mandatory as behavior is added |
+| Task 14 | Documentation | Foundation documented | `README.md`; architecture/security/run-card updates | Product docs must continue evolving with implementation |
 
 Update this matrix whenever implementing or changing product behavior. Link test files, migration notes, review evidence, or manual verification notes in the evidence column.

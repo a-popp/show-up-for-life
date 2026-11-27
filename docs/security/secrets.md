@@ -18,6 +18,8 @@ Do not duplicate MCP endpoints or credentials in project configuration. This wor
 
 `.env.example` may contain only blank values and explicitly safe local placeholders.
 
+For Phase 00 local development, `.env.local` must be created manually and must not be committed. `POSTGRES_PASSWORD`, the credentialed local `DATABASE_URL`, and `BETTER_AUTH_SECRET` are local-only generated secrets; the auth secret must be high entropy and at least 32 characters. CI creates an ephemeral test-only auth secret inside the job rather than storing one in repository configuration.
+
 ## Layered scanning
 
 1. Devin permissions/hooks reduce accidental reads, writes, and shell exposure.

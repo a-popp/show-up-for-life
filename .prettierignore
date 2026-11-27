@@ -1,0 +1,15 @@
+.next/
+.devin/
+node_modules/
+coverage/
+playwright-report/
+test-results/
+out/
+dist/
+build/
+drizzle/
+next-env.d.ts
+package-lock.json
+*.md
+*.yml
+*.yaml

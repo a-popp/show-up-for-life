@@ -59,24 +59,31 @@ jobs:
           GITLEAKS_ENABLE_UPLOAD_ARTIFACT: 'false'
 
   node-app:
-    name: Future Node application checks
+    name: Node application checks
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: showup
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: showup_for_life
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U showup -d showup_for_life"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 12
+    env:
+      DATABASE_URL: postgresql://showup@localhost:5432/showup_for_life
+      PGPASSWORD: ci
+      BETTER_AUTH_URL: http://localhost:3000
     steps:
       - name: Checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
 
-      - name: Check for application package
-        id: package
-        shell: bash
-        run: |
-          if [ -f package.json ]; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Require package lock
-        if: steps.package.outputs.exists == 'true'
         shell: bash
         run: |
           if [ ! -f package-lock.json ]; then
@@ -85,27 +92,47 @@ jobs:
           fi
 
       - name: Set up Node
-        if: steps.package.outputs.exists == 'true'
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version-file: .nvmrc
           cache: npm
 
+      - name: Create ephemeral CI auth secret
+        shell: bash
+        run: echo "BETTER_AUTH_SECRET=$(openssl rand -base64 32)" >> "$GITHUB_ENV"
+
       - name: Install dependencies
-        if: steps.package.outputs.exists == 'true'
         run: npm ci
 
       - name: Lint
-        if: steps.package.outputs.exists == 'true'
-        run: npm run lint --if-present
+        run: npm run lint
 
-      - name: Test
-        if: steps.package.outputs.exists == 'true'
-        run: npm test --if-present
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Run unit and component tests
+        run: npm test
+
+      - name: Apply database migrations
+        run: npm run db:migrate
+
+      - name: Run PostgreSQL integration tests
+        run: npm run test:integration
 
       - name: Build
-        if: steps.package.outputs.exists == 'true'
-        run: npm run build --if-present
+        run: npm run build
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright smoke tests
+        run: npm run test:e2e
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
 
   dependency-review:
     name: Dependency review

@@ -16,7 +16,7 @@ services:
     github:
       repo: a-popp/show-up-for-life
       branch: main
-      deploy_on_push: true
+      deploy_on_push: false
     envs:
       - key: APP_ENV
         value: production
