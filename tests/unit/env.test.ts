@@ -40,6 +40,7 @@ describe('environment validation', () => {
   it('requires an explicit auth URL in production', () => {
     vi.stubEnv('APP_ENV', 'production');
     vi.stubEnv('BETTER_AUTH_SECRET', 'x'.repeat(32));
+    vi.stubEnv('BETTER_AUTH_URL', undefined);
 
     expect(() => getAuthEnv()).toThrow();
   });
