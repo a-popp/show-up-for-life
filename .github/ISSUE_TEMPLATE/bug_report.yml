@@ -1,0 +1,31 @@
+name: Bug report
+description: Report incorrect or harmful behavior
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Please do not include secrets, private user data, exact location data, or sensitive report details in a public issue.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the behavior and why it is wrong.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include browser/device information if relevant, but omit private data.
+  - type: textarea
+    id: impact
+    attributes:
+      label: Privacy, safety, or accessibility impact
+      description: Note whether the bug affects sensitive data, trust/safety, accessibility, or user wellbeing.

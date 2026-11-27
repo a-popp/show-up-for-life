@@ -1,0 +1,50 @@
+initialize:
+  - run: |
+      set -e
+      required_node="$(cat .nvmrc)"
+      export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+      if [ -s "$NVM_DIR/nvm.sh" ]; then
+        . "$NVM_DIR/nvm.sh"
+      fi
+      if command -v nvm >/dev/null 2>&1; then
+        nvm install "$required_node"
+        nvm use "$required_node"
+      elif command -v node >/dev/null 2>&1; then
+        echo "nvm unavailable; using preinstalled Node $(node --version). Required: v$required_node"
+      else
+        echo "Node $required_node is required and neither nvm nor node is available" >&2
+        exit 1
+      fi
+      python3 -m venv .venv-tools
+      .venv-tools/bin/python -m pip install -r requirements-dev.txt
+
+maintenance:
+  - run: |
+      set -e
+      if [ -f package.json ]; then
+        if [ ! -f package-lock.json ]; then
+          echo "package.json exists without package-lock.json" >&2
+          exit 1
+        fi
+        npm ci
+      else
+        echo "No application package.json yet; skipping npm dependency installation."
+      fi
+      if [ ! -x .venv-tools/bin/pre-commit ]; then
+        python3 -m venv .venv-tools
+        .venv-tools/bin/python -m pip install -r requirements-dev.txt
+      fi
+
+knowledge:
+  - name: verify
+    contents: |
+      python scripts/check_workspace.py --ci
+      python scripts/check_secrets.py --all
+      python -m unittest discover -s tests -v
+      .venv-tools/bin/pre-commit run --all-files
+  - name: future-app-checks
+    contents: |
+      Once package.json exists, use npm ci and the repository's lint/test/build scripts. Do not invent a second package manager; use npm and package-lock.json.
+  - name: deployment-boundary
+    contents: |
+      Do not provision DigitalOcean or Mailgun resources, send real email, or deploy without explicit user approval. Deployment scaffolding is planning-only until the user approves a separate deployment task.

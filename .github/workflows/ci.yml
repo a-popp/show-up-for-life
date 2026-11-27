@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  workspace:
+    name: Workspace validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.14'
+
+      - name: Install workspace tooling
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Run pre-commit checks
+        run: pre-commit run --all-files
+
+      - name: Run workspace validation
+        run: python scripts/check_workspace.py --ci
+
+      - name: Run custom secret scan
+        run: python scripts/check_secrets.py --all
+
+      - name: Run workspace script tests
+        run: python -m unittest discover -s tests -v
+
+  secret-scan:
+    name: Full-history gitleaks scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+
+      - name: Scan for committed secrets
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: gitleaks.toml
+          GITLEAKS_ENABLE_COMMENTS: 'false'
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: 'false'
+
+  node-app:
+    name: Future Node application checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Check for application package
+        id: package
+        shell: bash
+        run: |
+          if [ -f package.json ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Require package lock
+        if: steps.package.outputs.exists == 'true'
+        shell: bash
+        run: |
+          if [ ! -f package-lock.json ]; then
+            echo "package.json exists but package-lock.json is missing" >&2
+            exit 1
+          fi
+
+      - name: Set up Node
+        if: steps.package.outputs.exists == 'true'
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.package.outputs.exists == 'true'
+        run: npm ci
+
+      - name: Lint
+        if: steps.package.outputs.exists == 'true'
+        run: npm run lint --if-present
+
+      - name: Test
+        if: steps.package.outputs.exists == 'true'
+        run: npm test --if-present
+
+      - name: Build
+        if: steps.package.outputs.exists == 'true'
+        run: npm run build --if-present
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Review dependency changes
+        uses: actions/dependency-review-action@bbc44d14a204704ccc493733616cd1e93a0321ec

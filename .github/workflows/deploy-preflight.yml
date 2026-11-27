@@ -1,0 +1,34 @@
+name: Deployment preflight
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-manual
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    name: Manual deployment preflight
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.14'
+
+      - name: Validate deployment scaffolding
+        run: python scripts/check_workspace.py --deployment-preflight
+
+      - name: Print manual deployment boundaries
+        run: |
+          echo "This workflow performs no deployment and calls no cloud mutation API."
+          echo "Review docs/ci-cd/app-platform.md before any provisioning."
+          echo "App Platform auto-deploy may not wait for GitHub Actions checks."

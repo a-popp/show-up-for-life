@@ -1,0 +1,23 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+      - id: detect-private-key
+      - id: mixed-line-ending
+  - repo: local
+    hooks:
+      - id: project-secret-scan
+        name: Project secret scan
+        entry: python scripts/check_secrets.py --staged
+        language: system
+        pass_filenames: false
+      - id: workspace-config-check
+        name: Workspace configuration check
+        entry: python scripts/check_workspace.py --pre-commit
+        language: system
+        pass_filenames: false

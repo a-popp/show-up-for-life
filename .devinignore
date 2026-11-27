@@ -1,0 +1,29 @@
+# High-risk local files that Devin Desktop should not ingest. Standalone Devin CLI
+# relies primarily on .gitignore plus permissions/hooks; this file is defense in depth.
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+**/secrets/
+**/.secrets/
+.devin/config.local.json
+.devin/mcp_config.local.json
+.venv/
+.venv-tools/
+node_modules/
+.next/
+dist/
+build/
+coverage/

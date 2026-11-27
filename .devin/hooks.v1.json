@@ -1,0 +1,38 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "^(write|edit|notebook_edit|exec)$",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python scripts/devin/pre_tool_guard.py",
+          "timeout": 10
+        }
+      ]
+    }
+  ],
+  "SessionStart": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python scripts/devin/session_start.py",
+          "timeout": 10
+        }
+      ]
+    }
+  ],
+  "UserPromptSubmit": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "python scripts/devin/user_prompt_context.py",
+          "timeout": 5
+        }
+      ]
+    }
+  ]
+}

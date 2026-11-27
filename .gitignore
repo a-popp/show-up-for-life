@@ -1,0 +1,64 @@
+# Secrets and local environment files
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+**/secrets/
+**/.secrets/
+
+# Devin/local AI-tool configuration that may contain personal settings or secrets
+.devin/config.local.json
+.devin/mcp_config.local.json
+AGENTS.local.md
+.claude/
+.cursor/
+.windsurf/
+.codeium/
+
+# Local tool environments and caches
+.venv/
+.venv-tools/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+node_modules/
+.cache/
+.turbo/
+
+# Application build/test output (for future use)
+.next/
+out/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Local data, logs, and OS/editor noise
+*.log
+*.sqlite
+*.sqlite3
+*.db
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# Local deployment overrides
+.do/*.local.yaml
+.do/*.local.yml

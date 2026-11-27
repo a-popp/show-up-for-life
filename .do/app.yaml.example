@@ -1,0 +1,35 @@
+# Example only. Copy and adjust deliberately before any future approved deployment.
+# Do not commit a real active .do/app.yaml until deployment has been approved.
+# No secrets belong in this file; use App Platform/GitHub secret management.
+
+name: show-up-for-life
+region: nyc
+
+services:
+  - name: web
+    source_dir: /
+    environment_slug: node-js
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    build_command: npm run build
+    run_command: npm run start
+    github:
+      repo: a-popp/show-up-for-life
+      branch: main
+      deploy_on_push: true
+    envs:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        value: ${db.DATABASE_URL}
+        scope: RUN_TIME
+      # MAILGUN_API_KEY and other sensitive values must be configured as secrets
+      # through approved secret management, not committed here.
+
+databases:
+  - name: db
+    engine: PG
+    production: true
+    cluster_name: REPLACE_WITH_POSTGRES_CLUSTER_NAME
+    db_name: showupforlife
+    db_user: app

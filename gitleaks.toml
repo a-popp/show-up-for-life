@@ -1,0 +1,30 @@
+title = "Show Up For Life gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Project placeholder and generated-file allowlist"
+paths = [
+  '''(?i)(?:^|/)(?:node_modules|dist|build|coverage|\.next|\.venv|\.venv-tools)(?:/.*)?$''',
+  '''(?i)(?:^|/)package-lock\.json$''',
+]
+regexes = [
+  '''(?i)^(?:replace[-_ ]?me|placeholder|example|dummy|changeme|todo|none|null)$''',
+  '''^__(?:EXAMPLE|LOCAL_ONLY|PLACEHOLDER)__$''',
+  '''^<[^>]+>$''',
+  '''^\$\{[^}]+}$''',
+  '''^\{\{[^}]+\}\}$''',
+]
+
+[[rules]]
+id = "digitalocean-personal-access-token"
+description = "DigitalOcean personal access token"
+regex = '''\b(dop_v1_[a-f0-9]{64})\b'''
+keywords = ["dop_v1_"]
+
+[[rules]]
+id = "mailgun-legacy-api-key"
+description = "Mailgun legacy API key"
+regex = '''\b(key-[0-9a-f]{32})\b'''
+keywords = ["key-"]
