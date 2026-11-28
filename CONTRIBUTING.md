@@ -1,6 +1,6 @@
 # Contributing
 
-This is currently a solo-maintained hobby project, but the repository is structured so it can safely become public.
+This is currently a solo-maintained hobby project. The repository is public, and much of it is developed through AI-agent-assisted workflows under human direction and review.
 
 ## Before making changes
 
@@ -19,8 +19,8 @@ python scripts/check_secrets.py --all
 python -m unittest discover -s tests -v
 ```
 
-Once an application exists, also run its lint, test, and build commands.
+Also run the application lint, typecheck, test, and build commands listed in the README when changing application code or dependencies.
 
 ## Pull requests
 
-Direct-to-main development is acceptable during the initial private scaffolding phase. Before the repository becomes public or production deployment is enabled, transition to short-lived branches, pull requests, and protected main-branch checks as described in `docs/security/github-hardening.md`.
+Use short-lived branches and pull requests by default now that the repository is public. Before production deployment is enabled, protected main-branch checks must be configured as described in `docs/security/github-hardening.md`.

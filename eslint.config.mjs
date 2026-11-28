@@ -1,3 +1,4 @@
+import { fixupConfigRules } from '@eslint/compat';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTypeScript from 'eslint-config-next/typescript';
 
@@ -15,8 +16,8 @@ const eslintConfig = [
       'build/**',
     ],
   },
-  ...nextVitals,
-  ...nextTypeScript,
+  ...fixupConfigRules(nextVitals),
+  ...fixupConfigRules(nextTypeScript),
   {
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',

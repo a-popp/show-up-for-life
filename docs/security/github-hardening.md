@@ -1,17 +1,19 @@
 # GitHub hardening checklist
 
-The repository is private initially but is intended to become public. Treat every commit as public-ready.
+The repository is public. Treat every commit, issue, pull request, workflow log, wiki page, and release as public-facing.
 
-## Current private-repository posture
+## Current public-repository posture
 
-GitHub-native secret scanning and push protection may require paid GitHub Secret Protection for private repositories. Therefore local pre-commit scanning and CI gitleaks are the primary secret-scanning controls right now. Do not assume GitHub will block a secret push while the repository is private.
+Public repositories can use GitHub-native secret scanning, push protection, dependency review, and code scanning without GitHub Advanced Security. Because the visibility transition is recent, manually confirm which settings are enabled rather than assuming they are active. Local pre-commit scanning and CI gitleaks remain defense-in-depth even when GitHub-native controls are enabled.
 
-## Before making the repository public
+The dependency-review action should now be available because the repository is public. If it still fails with `Forbidden`, inspect dependency-graph/security settings and the action error before merging further dependency changes. `npm audit` remains a local/CI vulnerability gate, but it is not a complete substitute for introduced-dependency and license review.
+
+## Public-repository hardening checklist
 
 - [ ] Scan full git history with the custom scanner and gitleaks.
 - [ ] Rotate/revoke any credential that may ever have been exposed before cleaning history.
-- [ ] Enable free public-repository secret scanning and push protection where available.
-- [ ] Enable Dependabot alerts and security updates.
+- [ ] Confirm free public-repository secret scanning and push protection are enabled where available.
+- [ ] Confirm Dependabot alerts and security updates are enabled.
 - [ ] Enable private vulnerability reporting.
 - [ ] Transition from direct-to-main development to protected main/rulesets requiring checks.
 - [ ] Require pull-request review or at least required status checks before merge.
@@ -33,7 +35,7 @@ GitHub-native secret scanning and push protection may require paid GitHub Secret
 
 ## Static application security testing
 
-No active CodeQL workflow is included yet because private-repository GitHub code security features may require a paid plan and the repository is not yet public. This is a deferred public-beta gate, not a permanent omission. When the repository becomes public, or if the maintainer chooses an available paid feature or another cost-appropriate scanner, add a minimal JavaScript/TypeScript SAST workflow such as CodeQL or Semgrep, pinned to full SHAs where applicable and scoped to relevant paths. Do not make the beta public without reviewing the resulting high/critical findings.
+No active CodeQL workflow is included yet. Feature availability is no longer the blocker because the repository is public; this is deferred implementation work, not a permanent omission. Add a minimal JavaScript/TypeScript SAST workflow such as CodeQL or Semgrep, pinned to full SHAs where applicable and scoped to relevant paths, before public beta reliance. Do not make the beta public without reviewing the resulting high/critical findings.
 
 ## Repository deletion and destructive actions
 

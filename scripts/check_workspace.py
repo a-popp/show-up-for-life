@@ -256,6 +256,12 @@ def validate_runtime_version_alignment(errors: list[str]) -> None:
         if int(next_major) != int(node_major) + 1:
             errors.append("package.json engines.node upper bound must be the next exclusive major")
 
+    dependencies = package.get("dependencies", {})
+    react_version = dependencies.get("react", "")
+    react_dom_version = dependencies.get("react-dom", "")
+    if react_version and react_dom_version and react_version != react_dom_version:
+        errors.append("react and react-dom must use the same exact version")
+
 
 def validate_postgres_version_alignment(errors: list[str]) -> None:
     for path in (ROOT / "docker-compose.yml", ROOT / ".github/workflows/ci.yml"):
@@ -353,6 +359,7 @@ def validate_devin_frontmatter(errors: list[str]) -> None:
     expected_skills = {
         "orient": None,
         "trace-requirements": None,
+        "align-documentation": None,
         "review-security": "security-reviewer",
         "review-privacy-safety": "privacy-reviewer",
         "review-accessibility": "accessibility-reviewer",

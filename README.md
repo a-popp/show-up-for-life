@@ -6,11 +6,13 @@ Show Up For Life is a planned responsive web application that helps people turn 
 
 This repository now contains the **Phase 00 application foundation**: a strict TypeScript/Next.js shell, PostgreSQL/Drizzle foundation, Better Auth integration skeleton, database-backed job/outbox primitives, and test/CI harnesses. It does not yet contain user-facing account, event, matching, notification, or social product behavior. No cloud or email resources have been provisioned.
 
+Much of the implementation and documentation is developed through AI-agent-assisted workflows under human direction and review. The documentation is written both for people working manually and for future agent sessions; agent guidance does not replace verification or human accountability.
+
 The implementation direction is a TypeScript modular monolith using Next.js/React, Node, PostgreSQL, npm, DigitalOcean App Platform, and Mailgun for transactional email. DigitalOcean and Mailgun remain planning constraints, not deployed resources.
 
 ## Local requirements
 
-- Node.js matching `.nvmrc` for future application work
+- Node.js matching `.nvmrc` for application and npm tooling work
 - Python matching `.python-version` for workspace validation hooks
 - npm (bundled with Node)
 - Docker Desktop/Compose for the standard local PostgreSQL service

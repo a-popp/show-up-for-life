@@ -26,7 +26,7 @@ For Phase 00 local development, `.env.local` must be created manually and must n
 2. `.gitignore` prevents high-risk paths from being tracked. `.devinignore` is defense in depth for Devin Desktop; standalone Devin CLI relies primarily on `.gitignore` plus permissions/hooks.
 3. pre-commit runs private-key detection plus `scripts/check_secrets.py --staged`.
 4. CI runs the custom scanner and full-history gitleaks with `gitleaks.toml`.
-5. Before public visibility, run a full-history review and enable GitHub-native protections where available.
+5. For visibility or hosting-provider changes, repeat the full-history review and confirm GitHub-native protections using `github-hardening.md`.
 
 ## False positives
 

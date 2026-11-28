@@ -1,6 +1,6 @@
 # Phase 00 — Application foundation
 
-> **Status:** Implemented and verified locally and in GitHub CI<br>
+> **Status:** Implemented; verified locally and in GitHub CI at phase completion<br>
 > **Depends on:** None<br>
 > **Release significance:** Development foundation only; not user-facing
 
