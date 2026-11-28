@@ -63,6 +63,16 @@ class WorkspaceScriptTests(unittest.TestCase):
         self.assertIn("SessionStart", check_workspace.KNOWN_HOOK_EVENTS)
         self.assertIn("Stop", check_workspace.KNOWN_HOOK_EVENTS)
 
+    def test_node_runtime_files_are_aligned(self) -> None:
+        errors: list[str] = []
+        check_workspace.validate_runtime_version_alignment(errors)
+        self.assertEqual(errors, [])
+
+    def test_postgres_images_use_supported_major(self) -> None:
+        errors: list[str] = []
+        check_workspace.validate_postgres_version_alignment(errors)
+        self.assertEqual(errors, [])
+
 
 class DevinHookTests(unittest.TestCase):
     def run_hook(self, script_name: str, payload: dict[str, object]) -> subprocess.CompletedProcess[str]:

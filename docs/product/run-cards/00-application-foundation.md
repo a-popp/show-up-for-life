@@ -1,6 +1,6 @@
 # Phase 00 — Application foundation
 
-> **Status:** Implemented and locally verified; CI observation pending first push<br>
+> **Status:** Implemented and verified locally and in GitHub CI<br>
 > **Depends on:** None<br>
 > **Release significance:** Development foundation only; not user-facing
 
@@ -88,11 +88,13 @@ Resolved during implementation planning:
 1. Docker Compose is the standard local PostgreSQL path.
 2. Initial dependency versions were selected after age/security review and are recorded in `package.json`.
 3. The worker is a separate entrypoint inside the same application/deployable.
+4. Node.js 26 LTS is the current application runtime, with `.nvmrc`, package engines, and type definitions kept major-version aligned.
+5. PostgreSQL 18 remains the intentional local/CI database major because it is the newest version currently supported for new DigitalOcean managed PostgreSQL clusters. PostgreSQL 19 adoption requires architecture review and DigitalOcean support.
+6. GitHub Actions has been observed green after the first approved push.
 
 Remaining environment checks:
 
-1. The first real local `.env.local` must be created manually; no auth/database secret is committed.
-2. GitHub Actions must be observed after the first approved push; local equivalents of the migration, PostgreSQL integration, build, and Playwright checks have passed.
+1. Each new development machine must create `.env.local` manually; no auth/database secret is committed.
 
 ## Completion criteria
 

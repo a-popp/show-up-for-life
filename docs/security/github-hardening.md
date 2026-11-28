@@ -23,6 +23,8 @@ GitHub-native secret scanning and push protection may require paid GitHub Secret
 
 - Keep top-level workflow permissions least-privilege, normally `contents: read`.
 - Pin third-party and GitHub actions to full commit SHAs and update them deliberately.
+- Use Dependabot cooldowns for routine version updates; do not intentionally delay security updates.
+- Do not merge dependency updates that violate runtime, type-definition, database, or deployment-platform alignment.
 - Never use `pull_request_target` for untrusted code execution.
 - Do not print secrets or environment dumps in workflow logs.
 - Use environments with approval rules before any production deployment.

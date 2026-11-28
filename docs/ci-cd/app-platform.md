@@ -23,6 +23,7 @@ Check current DigitalOcean and Mailgun pricing at planning time; do not hard-cod
 ## Manual pre-provisioning checklist
 
 - [ ] Application exists and builds locally with `npm ci` and production build command.
+- [ ] Current DigitalOcean Node.js buildpack supports the minimum Node.js version required by `package.json`.
 - [ ] Database migration/bootstrap strategy documented and tested locally.
 - [ ] Required runtime variables identified; no secrets committed.
 - [ ] `.do/app.yaml.example` copied/adjusted into an active spec only after review.

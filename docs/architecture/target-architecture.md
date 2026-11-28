@@ -13,12 +13,12 @@ This is the architectural direction, not deployed infrastructure. Phase 00 estab
 
 ## Components
 
-- **Web/application service:** Next.js/React and Node in a single root application.
+- **Web/application service:** Next.js/React and Node.js 26 LTS in a single root application.
 - **Database:** PostgreSQL, eventually a small managed DigitalOcean database because backups and patching are worth the cost.
 - **Transactional email:** Mailgun only for necessary transactional messages. Development uses test mode/local inspection; no open/click tracking by default.
 - **Hosting:** DigitalOcean App Platform is the future direction after explicit approval.
 - **Jobs:** Database-backed scheduling/outbox where practical for RSVP cutoffs, threshold evaluation, spontaneous expiry, and notification delivery. Phase 00 establishes a separate worker entrypoint inside the same application/deployable; it can initially run beside the web process in one low-cost deployment and can later split into a separate worker component without changing domain code.
-- **Local database:** PostgreSQL 18 through Docker Compose, aligned with DigitalOcean's current supported managed PostgreSQL versions. Migrations are explicit operational actions and never run automatically at application boot.
+- **Local database:** PostgreSQL 18 through Docker Compose, aligned with DigitalOcean's current supported managed PostgreSQL versions. PostgreSQL major-version changes require architecture review and confirmed DigitalOcean managed-database support. Migrations are explicit operational actions and never run automatically at application boot.
 
 ## Explicit non-goals initially
 

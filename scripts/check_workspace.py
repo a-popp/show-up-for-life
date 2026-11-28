@@ -14,6 +14,7 @@ from urllib.parse import unquote
 from security_patterns import is_high_risk_secret_path
 
 ROOT = Path(__file__).resolve().parents[1]
+SUPPORTED_POSTGRES_MAJOR = "18"
 
 REQUIRED_FILES = [
     ".gitignore",
@@ -217,6 +218,56 @@ def validate_env_example(errors: list[str]) -> None:
             errors.append(f".env.example line {line_number} must be blank or an approved local placeholder")
 
 
+def parse_major_version(version: str) -> str | None:
+    match = re.match(r"^(\d+)\.", version.strip())
+    return match.group(1) if match else None
+
+
+def validate_runtime_version_alignment(errors: list[str]) -> None:
+    nvmrc_path = ROOT / ".nvmrc"
+    package_path = ROOT / "package.json"
+    if not nvmrc_path.is_file() or not package_path.is_file():
+        return
+
+    node_version = nvmrc_path.read_text(encoding="utf-8").strip()
+    node_major = parse_major_version(node_version)
+    if node_major is None:
+        errors.append(".nvmrc must contain a numeric Node.js version")
+        return
+
+    try:
+        package = json.loads(package_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        errors.append(f"package.json is not strict JSON: {exc}")
+        return
+
+    node_types = package.get("devDependencies", {}).get("@types/node", "")
+    if parse_major_version(node_types) != node_major:
+        errors.append(f"@types/node major version must match .nvmrc Node.js major {node_major}")
+
+    node_engine = package.get("engines", {}).get("node", "")
+    engine_match = re.fullmatch(r">=(\d+\.\d+\.\d+) <(\d+)\.0\.0", node_engine)
+    if not engine_match:
+        errors.append("package.json engines.node must use the form '>=X.Y.Z <NEXT_MAJOR.0.0'")
+    else:
+        minimum_version, next_major = engine_match.groups()
+        if minimum_version != node_version:
+            errors.append("package.json engines.node minimum must match .nvmrc")
+        if int(next_major) != int(node_major) + 1:
+            errors.append("package.json engines.node upper bound must be the next exclusive major")
+
+
+def validate_postgres_version_alignment(errors: list[str]) -> None:
+    for path in (ROOT / "docker-compose.yml", ROOT / ".github/workflows/ci.yml"):
+        if not path.is_file():
+            continue
+        match = re.search(r"image:\s*postgres:(\d+)-alpine\b", path.read_text(encoding="utf-8"))
+        if not match:
+            errors.append(f"{rel(path)} must declare a postgres:<major>-alpine image")
+        elif match.group(1) != SUPPORTED_POSTGRES_MAJOR:
+            errors.append(f"{rel(path)} must use PostgreSQL {SUPPORTED_POSTGRES_MAJOR} until the architecture deliberately changes")
+
+
 def validate_python_syntax(errors: list[str]) -> None:
     import py_compile
 
@@ -376,6 +427,8 @@ def run_checks() -> list[str]:
     validate_precommit(errors)
     validate_workflows(errors)
     validate_env_example(errors)
+    validate_runtime_version_alignment(errors)
+    validate_postgres_version_alignment(errors)
     validate_python_syntax(errors)
     validate_markdown_links(errors)
     validate_tracked_secret_paths(errors)
